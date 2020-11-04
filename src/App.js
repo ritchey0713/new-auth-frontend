@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Route, Switch } from "react-router-dom";
+import Home from "./components/Home";
+import Registration from "./components/Registration";
+import { checkLoggedInStatus } from "./actions/userActions";
+class App extends Component {
+  componentDidMount() {
+    //check if logged in
+    this.props.checkLoggedInStatus();
+  }
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  render() {
+    return (
+      <div>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/sign-up" component={Registration} />
+        </Switch>
+      </div>
+    );
+  }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user.currentUser,
+    loggedIn: state.user.loggedIn,
+  };
+};
+
+export default connect(mapStateToProps, { checkLoggedInStatus })(App);
